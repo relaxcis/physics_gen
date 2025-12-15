@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Кинематика: Расчет Пути</title>
+</head>
+<body>
+    <h1>Расчет пути при равноускоренном движении</h1>
+    <form id="kinematicsForm">
+        <label for="v0">Начальная скорость (м/с):</label>
+        <input type="number" id="v0" value="10" required><br><br>
+
+        <label for="a">Ускорение (м/с²):</label>
+        <input type="number" id="a" value="2" required><br><br>
+
+        <label for="t">Время (с):</label>
+        <input type="number" id="t" value="5" required><br><br>
+
+        <button type="submit">Рассчитать и Построить График</button>
+    </form>
+
+    <h2>Результат:</h2>
+    <p id="resultText"></p>
+    <img id="resultImage" src="" alt="График скорости" style="max-width: 100%;">
+
+    <script>
+        document.getElementById('kinematicsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const data = {
+                v0: parseFloat(document.getElementById('v0').value),
+                a: parseFloat(document.getElementById('a').value),
+                t: parseFloat(document.getElementById('t').value)
+            };
+
+            // Отправка данных на бэкенд (предполагаем, что бэкенд запущен на /calculate)
+            const response = await fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            // Отображение числового результата
+            document.getElementById('resultText').innerText = 
+                `Пройденный путь (S) = ${result.distance.toFixed(2)} метров.`;
+
+            // Отображение графика
+            document.getElementById('resultImage').src = 'data:image/png;base64,' + result.plot_base64;
+        });
+    </script>
+</body>
+</html>
