@@ -19,6 +19,16 @@ def calculate_kinematics(v0, a, t):
     
     # 3. Создание графика
     fig, ax = plt.subplots()
+    # ... (код построения графика)
+    
+    # Сохранение графика в памяти и кодирование в base64
+    buf = io.BytesIO()
+    # ИСПРАВЛЕНИЕ: Добавьте явное указание DPI и facecolor
+    plt.savefig(buf, format='png', dpi=100, facecolor=fig.get_facecolor(), bbox_inches='tight') 
+    plt.close(fig) 
+    plot_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    
+    return distance, plot_base64
     ax.plot(time_points, velocity_points, label=f'v(t) = {v0} + {a}t')
     ax.set_title('График скорости v(t)')
     ax.set_xlabel('Время (с)')
